@@ -80,6 +80,9 @@ class VideoPlayerViewController: UIViewController {
             self.log.high("Resigning")
             self.pause()
         }
+
+        let tapper = UITapGestureRecognizer(target: self, action: #selector(videoTapped(_:)))
+        videoView.addGestureRecognizer(tapper)
     }
 
     override func viewDidLayoutSubviews() {
@@ -186,17 +189,13 @@ extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
 extension VideoPlayerViewController {
 
     @IBAction func onPlayButtonTouched(_ sender: UIButton) {
-
         log.high("Play button pressed")
+        togglePlay()
+    }
 
-        switch player.state {
-        case .notReady:
-            showOkAlert(title: "Player is not ready", message: nil)
-        case .stopped, .paused:
-            play()
-        case .playing:
-            pause()
-        }
+    @objc func videoTapped(_ sender: UITapGestureRecognizer) {
+        log.high("Video tapped")
+        togglePlay()
     }
 }
 
@@ -256,5 +255,17 @@ extension VideoPlayerViewController {
         let minutes = Int(seconds / 60)
         let seconds = Int(seconds) % 60
         timeLabel.text = String(format: "%02d:%02d", minutes, seconds)
+    }
+
+    private func togglePlay() {
+
+        switch player.state {
+        case .notReady:
+            showOkAlert(title: "Player is not ready", message: nil)
+        case .stopped, .paused:
+            play()
+        case .playing:
+            pause()
+        }
     }
 }
