@@ -42,8 +42,11 @@ class VideoPlayerViewController: UIViewController {
     private lazy var player: AwesomePlayer = AwesomePlayer(
         url: videoURL,
         thumbInterval: 5,
+        layer: videoLayer,
         log: log
     )
+
+    private lazy var videoLayer = AwesomePlayer.Layer()
 
     private var thumbStripOffset: CGPoint = .zero
 
@@ -92,10 +95,9 @@ class VideoPlayerViewController: UIViewController {
 
             log.high("Init subviews")
 
-            let playerLayer = player.layer
-            playerLayer.frame = videoView.bounds
-            playerLayer.videoGravity = .resizeAspectFill
-            videoView.layer.addSublayer(playerLayer)
+            videoLayer.frame = videoView.bounds
+            videoLayer.videoGravity = .resizeAspectFill
+            videoView.layer.addSublayer(videoLayer)
 
             collectionView.contentInset = UIEdgeInsets(
                 top: 0,

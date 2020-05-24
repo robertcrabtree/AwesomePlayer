@@ -126,11 +126,6 @@ public class AwesomePlayer {
     private(set) var thumbs: [UIImage] = []
 
     /**
-     The layer that the player will render video to.
-     */
-    private(set) lazy var layer: Layer = Layer(player: player)
-
-    /**
      The length of the video clip in seconds.
      */
     public var duration: Double {
@@ -177,13 +172,16 @@ public class AwesomePlayer {
      - Parameter url: The URL of the video clip to play.
      - Parameter thumbInterval: The thumbnail interval in seconds. The player will generate a thumbnail every
      thumbInterval seconds.
+     - Parameter layer: The layer to render the video to.
      - Parameter log: The log utility.
      */
-    public init(url: URL, thumbInterval: Int, log: Log) {
+    public init(url: URL, thumbInterval: Int, layer: Layer, log: Log) {
 
         let asset = AVAsset(url: url)
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
+
+        layer.player = player
 
         self.url = url
         self.thumbInterval = thumbInterval
