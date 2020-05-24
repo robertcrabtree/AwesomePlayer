@@ -25,31 +25,9 @@ public struct LogLevel: OptionSet {
     }
 }
 
-public class Log {
-
-    private let enabledLevels: LogLevel
-
-    public init(enabledLevels: LogLevel = .allButLow) {
-        self.enabledLevels = enabledLevels
-    }
-
-    public func low(_ message: String) {
-        guard enabledLevels.contains(.low) else { return }
-        print("LOW: " + message)
-    }
-
-    public func medium(_ message: String) {
-        guard enabledLevels.contains(.medium) else { return }
-        print("MED: " + message)
-    }
-
-    public func high(_ message: String) {
-        guard enabledLevels.contains(.high) else { return }
-        print("HIGH: " + message)
-    }
-
-    public func error(_ message: String) {
-        guard enabledLevels.contains(.error) else { return }
-        print("ERROR: " + message)
-    }
+public protocol Log {
+    func low(_ message: String)
+    func medium(_ message: String)
+    func high(_ message: String)
+    func error(_ message: String)
 }

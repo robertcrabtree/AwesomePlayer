@@ -25,11 +25,11 @@ class VideoPlayerViewController: UIViewController {
         return UIImage(systemName: "pause.circle", withConfiguration: imageConfig) ?? UIImage()
     }()
 
+    public var videoURL: URL!
+
+    public var log: Log!
+
     private let thumbWidth: CGFloat = 100
-
-    private lazy var videoURL: URL = Bundle.main.url(forResource: "video", withExtension: "MOV")!
-
-    private lazy var log: Log = Log(enabledLevels: .allButLow)
 
     private lazy var player: AwesomePlayer = AwesomePlayer(
         url: videoURL,

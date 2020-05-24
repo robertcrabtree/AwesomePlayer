@@ -10,6 +10,8 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+    let videoURL: URL = Bundle.main.url(forResource: "video", withExtension: "MOV")!
+
     var window: UIWindow?
 
     func scene(
@@ -18,6 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard (scene as? UIWindowScene) != nil else { return }
+        guard let vc = window?.rootViewController as? VideoPlayerViewController else { return }
+        vc.videoURL = videoURL
+        vc.log = ConsoleLog(enabledLevels: .allButLow)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
