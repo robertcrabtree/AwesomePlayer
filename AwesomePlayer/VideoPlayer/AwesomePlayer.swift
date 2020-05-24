@@ -160,7 +160,7 @@ public class AwesomePlayer {
 
     private let player: AVPlayer
 
-    private var chasePosition: Double = 0.0
+    private var chaseTime: CMTime = .zero
 
     private var isSeekInProgress: Bool = false
 
@@ -233,13 +233,6 @@ public class AwesomePlayer {
     public func play() throws {
         guard item.status == .readyToPlay else { throw Error.invalidState }
         log.high("Start player")
-
-        // If we are at the end of the clip we should seek to the beginning so we can play
-        // from the beginning.
-        if state == .stopped {
-            player.seek(to: .zero)
-        }
-
         state = .playing
         player.play()
     }
@@ -269,58 +262,23 @@ public class AwesomePlayer {
 
         log.low("Seeking to \(position)")
 
-        // Don't seek to the same position as we did previously
-        guard position != chasePosition else { return }
+        let duration = item.duration.seconds
+        let time = CMTime(
+            value: CMTimeValue(duration * position * Double(NSEC_PER_SEC)),
+            timescale: CMTimeScale(NSEC_PER_SEC)
+        )
 
-        // Save the position in case we are already seeking. We will seek to this position
+        // Don't seek to the same position as we did previously
+        guard time != chaseTime else { return }
+
+        // Save the time in case we are already seeking. We will seek to this time
         // after seek completes.
-        chasePosition = position
+        chaseTime = time
 
         // Don't seek to this position until seek is complete
         guard !isSeekInProgress else { return }
 
         actuallySeek()
-    }
-
-    public func actuallySeek() {
-
-        let thisPosition = chasePosition
-
-        isSeekInProgress = true
-
-        // If play hasn't been called but seeking is occurring then go to the paused state.
-        // If play is called then it will play from the time we seeked to.
-        if state == .stopped {
-            state = .paused
-        }
-
-        let duration = item.duration.seconds
-        let time = CMTime(
-            value: CMTimeValue(duration * thisPosition * Double(NSEC_PER_SEC)),
-            timescale: CMTimeScale(NSEC_PER_SEC)
-        )
-
-        player.pause()
-
-        player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
-
-            // If we arrived to the end of the clip then move out of the playing/paused state.
-            // When play is called again the clip will start at the beginning.
-            if self.item.duration.seconds == self.item.currentTime().seconds {
-                self.isSeekInProgress = false
-                self.state = .stopped
-                self.delegate?.awesomePlayerClipEnded()
-            } else {
-                if thisPosition != self.chasePosition {
-                    self.actuallySeek()
-                } else {
-                    self.isSeekInProgress = false
-                    if self.state == .playing {
-                        self.player.play()
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -366,6 +324,36 @@ private extension AwesomePlayer {
         } while timeValue < duration
 
         log.high("Generated \(thumbs.count) thumbs")
+    }
+
+    private func actuallySeek() {
+
+        let time = chaseTime
+
+        isSeekInProgress = true
+
+        player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+
+            // If we arrived to the end of the clip then move out of the playing/paused state.
+            // When play is called again the clip will start at the beginning.
+            if self.item.duration == self.item.currentTime() {
+                self.isSeekInProgress = false
+                self.state = .stopped
+            } else {
+
+                // If the last time we received is this one then we don't need to keep seeking
+                if time == self.chaseTime {
+                    self.isSeekInProgress = false
+                } else {
+                    // Keep seeking
+                    if self.item.status == .readyToPlay {
+                        self.actuallySeek()
+                    } else {
+                        self.isSeekInProgress = false
+                    }
+                }
+            }
+        }
     }
 
     private func observePlayerEnd() -> NSObjectProtocol {

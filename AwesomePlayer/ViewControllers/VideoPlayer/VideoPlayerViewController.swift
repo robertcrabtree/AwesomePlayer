@@ -52,6 +52,8 @@ class VideoPlayerViewController: UIViewController {
 
     private var isScrubbing: Bool = false
 
+    private var playAfterScrubbing: Bool = false
+
     private var areSubviewsReady: Bool = false
 
     private var resignToken: NSObjectProtocol?
@@ -158,6 +160,8 @@ extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         log.high("Start scrubbing")
         isScrubbing = true
+        playAfterScrubbing = player.state == .playing
+        try! player.pause()
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -176,13 +180,13 @@ extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
             log.high("Stop scrubbing")
-            isScrubbing = false
+            finishScrubbing()
         }
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         log.high("Stop scrubbing")
-        isScrubbing = false
+        finishScrubbing()
     }
 }
 
@@ -220,11 +224,11 @@ extension VideoPlayerViewController: AwesomePlayerDelegate {
     func awesomePlayerTimeValueReady(_ seconds: Double) {
         updateTimeLabel(seconds: seconds)
 
-        if !self.isScrubbing {
-            let percent = CGFloat(seconds / player.duration)
+        if !isScrubbing {
+            let ratio = CGFloat(seconds / player.duration)
             let totalDistance = CGFloat(player.thumbs.count) * thumbWidth
             collectionView.contentOffset = CGPoint(
-                x: thumbStripOffset.x + totalDistance * percent,
+                x: thumbStripOffset.x + totalDistance * ratio,
                 y: thumbStripOffset.y
             )
         }
@@ -236,20 +240,15 @@ extension VideoPlayerViewController: AwesomePlayerDelegate {
 extension VideoPlayerViewController {
 
     private func play() {
-        do {
-            try player.play()
-        } catch {
-            showOkAlert(title: "Play failed", message: nil)
+        if player.currentTime == player.duration {
+            try! player.seek(to: 0.0)
         }
+        try! player.play()
         playButton.setImage(pauseButtonImage, for: .normal)
     }
 
     private func pause() {
-        do {
-            try player.pause()
-        } catch {
-            showOkAlert(title: "Pause failed", message: nil)
-        }
+        try! player.pause()
         playButton.setImage(playButtonImage, for: .normal)
     }
 
@@ -267,10 +266,22 @@ extension VideoPlayerViewController {
         }
 
         switch player.state {
-        case .stopped, .paused:
+        case .paused, .stopped:
             play()
         case .playing:
             pause()
+        }
+    }
+
+    private func finishScrubbing() {
+        isScrubbing = false
+        if playAfterScrubbing {
+            if player.currentTime != player.duration {
+                try! player.play()
+            } else {
+                playButton.setImage(playButtonImage, for: .normal)
+            }
+            playAfterScrubbing = false
         }
     }
 }
