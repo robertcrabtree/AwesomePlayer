@@ -79,7 +79,7 @@ class VideoPlayerViewController: UIViewController {
 
             log.high("Init subviews")
 
-            let playerLayer = player.makeLayer()
+            let playerLayer = player.layer
             playerLayer.frame = videoView.bounds
             playerLayer.videoGravity = .resizeAspectFill
             videoView.layer.addSublayer(playerLayer)
@@ -174,7 +174,7 @@ extension VideoPlayerViewController {
         log.high("Play button pressed")
 
         switch player.state {
-        case .none:
+        case .notReady:
             showOkAlert(title: "Player is not ready", message: nil)
         case .stopped, .paused:
             play()
@@ -190,7 +190,7 @@ extension VideoPlayerViewController: AwesomePlayerDelegate {
         collectionView.reloadData()
     }
 
-    func awesomePlayerEnded() {
+    func awesomePlayerClipEnded() {
         playButton.setImage(playButtonImage, for: .normal)
     }
 
