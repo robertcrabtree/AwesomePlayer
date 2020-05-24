@@ -46,12 +46,20 @@ class VideoPlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        log.high("viewDidLoad")
+
         playButton.setImage(playButtonImage, for: .normal)
 
         player.delegate = self
 
         collectionView.delegate = self
         collectionView.dataSource = self
+
+        do {
+            try player.getReady()
+        } catch {
+            log.error("Player failed to get ready with error: \(error)")
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -74,12 +82,6 @@ class VideoPlayerViewController: UIViewController {
             )
 
             initialContentOffset = collectionView.contentOffset
-
-            do {
-                try player.getReady()
-            } catch {
-                log.error("Player failed to get ready with error: \(error)")
-            }
         }
 
         areSubviewsReady = true
@@ -121,13 +123,6 @@ extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         log.high("Start scrubbing")
         isScrubbing = true
-        if player.state == .idle {
-            do {
-                try player.pause()
-            } catch {
-                showOkAlert(title: "Pause failed", message: nil)
-            }
-        }
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -205,9 +200,6 @@ extension VideoPlayerViewController {
 
     private func play() {
         do {
-            if player.state == .idle {
-                try player.seek(to: .zero)
-            }
             try player.play()
         } catch {
             showOkAlert(title: "Play failed", message: nil)

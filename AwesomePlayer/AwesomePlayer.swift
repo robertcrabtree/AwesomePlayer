@@ -44,6 +44,10 @@ public class AwesomePlayer: NSObject {
         return state == .notReady ? 0.0 : item.duration.seconds
     }
 
+    public var currentTime: Double {
+        return state == .notReady ? 0.0 : item.currentTime().seconds
+    }
+
     private(set) var state: State = .notReady
 
     private let url: URL
@@ -95,6 +99,11 @@ public class AwesomePlayer: NSObject {
     public func play() throws {
         guard state != .notReady else { throw Error.badState }
         log.high("Start player")
+
+        if state == .idle {
+            player.seek(to: .zero)
+        }
+
         state = .playing
         player.play()
     }
@@ -111,12 +120,19 @@ public class AwesomePlayer: NSObject {
 
         log.low("Seeking to \(value)")
 
+        if state == .idle {
+            state = .paused
+        }
+
         let duration = item.duration.seconds
         let time = CMTime(
             value: CMTimeValue(duration * value * Double(NSEC_PER_SEC)),
             timescale: CMTimeScale(NSEC_PER_SEC)
         )
         player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+            if finished && self.item.duration.seconds == self.item.currentTime().seconds {
+                self.state = .idle
+            }
             completion?(finished)
         }
     }
@@ -142,7 +158,7 @@ private extension AwesomePlayer {
 private extension AwesomePlayer {
 
     private func processPlayerReady() {
-        log.high("Awesome player ready")
+        log.high("Player ready")
         do {
             try generateThumbs()
             state = .idle

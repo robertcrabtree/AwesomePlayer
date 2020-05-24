@@ -29,7 +29,7 @@
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="c0b-3q-B84">
                                 <rect key="frame" x="0.0" y="744" width="414" height="70"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="IEJ-or-vyY"/>
                                 </constraints>
@@ -96,7 +96,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="c0b-3q-B84" firstAttribute="top" secondItem="xOs-Eh-Hva" secondAttribute="bottom" constant="20" id="3zB-9T-EN0"/>
                             <constraint firstItem="geU-BA-Lad" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8Ee-YM-ZD1"/>
