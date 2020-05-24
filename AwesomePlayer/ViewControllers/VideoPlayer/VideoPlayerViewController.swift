@@ -174,9 +174,9 @@ extension VideoPlayerViewController {
         log.high("Play button pressed")
 
         switch player.state {
-        case .notReady:
+        case .none:
             showOkAlert(title: "Player is not ready", message: nil)
-        case .idle, .paused:
+        case .stopped, .paused:
             play()
         case .playing:
             pause()

@@ -23,7 +23,7 @@ public class AwesomePlayer {
 
     public enum State {
         case none
-        case idle
+        case stopped
         case playing
         case paused
     }
@@ -105,7 +105,7 @@ public class AwesomePlayer {
 
         // If we are at the end of the clip we should seek to the beginning so we can play
         // from the beginning.
-        if state == .idle {
+        if state == .stopped {
             player.seek(to: .zero)
         }
 
@@ -127,7 +127,7 @@ public class AwesomePlayer {
 
         // If play hasn't been called but seeking is occurring then go to the paused state.
         // If play is called then it will play from the time we seeked to.
-        if state == .idle {
+        if state == .stopped {
             state = .paused
         }
 
@@ -141,7 +141,7 @@ public class AwesomePlayer {
             // If we arrived to the end of the clip then move out of the playing/paused state.
             // When play is called again the clip will start at the beginning.
             if finished && self.item.duration.seconds == self.item.currentTime().seconds {
-                self.state = .idle
+                self.state = .stopped
             }
             completion?(finished)
         }
@@ -166,7 +166,7 @@ private extension AwesomePlayer {
 
         do {
             try generateThumbs()
-            state = .idle
+            state = .stopped
             timeObserverToken = observeTimes()
             delegate?.awesomePlayerReady()
         } catch {
@@ -200,7 +200,7 @@ private extension AwesomePlayer {
         let center = NotificationCenter.default
         return center.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { _ in
             self.log.high("Player ended")
-            self.state = .idle
+            self.state = .stopped
             self.delegate?.awesomePlayerEnded()
         }
     }
