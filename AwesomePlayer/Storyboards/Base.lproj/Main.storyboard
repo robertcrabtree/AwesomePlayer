@@ -20,13 +20,24 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="744"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xOs-Eh-Hva">
-                                <rect key="frame" x="192" y="710" width="30.5" height="14"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rv4-el-Uy8">
+                                <rect key="frame" x="189" y="714" width="36.5" height="20"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xOs-Eh-Hva">
+                                        <rect key="frame" x="3" y="3" width="30.5" height="14"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="xOs-Eh-Hva" secondAttribute="bottom" constant="3" id="0CM-gP-ybU"/>
+                                    <constraint firstItem="xOs-Eh-Hva" firstAttribute="leading" secondItem="Rv4-el-Uy8" secondAttribute="leading" constant="3" id="8UG-zL-pio"/>
+                                    <constraint firstItem="xOs-Eh-Hva" firstAttribute="top" secondItem="Rv4-el-Uy8" secondAttribute="top" constant="3" id="Lz1-bz-6OZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="xOs-Eh-Hva" secondAttribute="trailing" constant="3" id="cx2-NT-qOc"/>
+                                </constraints>
+                            </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="c0b-3q-B84">
                                 <rect key="frame" x="0.0" y="744" width="414" height="70"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -98,10 +109,10 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="c0b-3q-B84" firstAttribute="top" secondItem="xOs-Eh-Hva" secondAttribute="bottom" constant="20" id="3zB-9T-EN0"/>
                             <constraint firstItem="geU-BA-Lad" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8Ee-YM-ZD1"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="geU-BA-Lad" secondAttribute="trailing" id="Jbz-xN-DZc"/>
-                            <constraint firstItem="xOs-Eh-Hva" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Kdw-ah-UL6"/>
+                            <constraint firstItem="Rv4-el-Uy8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="KEu-7o-ZUF"/>
+                            <constraint firstItem="c0b-3q-B84" firstAttribute="top" secondItem="Rv4-el-Uy8" secondAttribute="bottom" constant="10" id="Ou1-17-dWC"/>
                             <constraint firstItem="c0b-3q-B84" firstAttribute="top" secondItem="geU-BA-Lad" secondAttribute="bottom" id="RtB-BX-AsW"/>
                             <constraint firstItem="geU-BA-Lad" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="SYu-NZ-96g"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="h7S-lz-LAC" secondAttribute="trailing" id="Y4q-OY-qtt"/>
