@@ -20,9 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard (scene as? UIWindowScene) != nil else { return }
-        guard let vc = window?.rootViewController as? VideoPlayerViewController else { return }
-        vc.videoURL = videoURL
-        vc.log = ConsoleLog(enabledLevels: .allButLow)
+        guard let controller = window?.rootViewController as? VideoPlayerViewController else { return }
+        controller.videoURL = videoURL
+        controller.log = ConsoleLog(enabledLevels: .allButLow)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -32,6 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
+        NotificationCenter.default.post(name: .willResign, object: nil)
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
@@ -39,4 +40,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidEnterBackground(_ scene: UIScene) {
     }
+}
+
+extension Notification.Name {
+    static let willResign: Notification.Name = Notification.Name(rawValue: "willResign")
 }

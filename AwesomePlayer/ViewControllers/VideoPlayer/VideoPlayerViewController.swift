@@ -43,6 +43,8 @@ class VideoPlayerViewController: UIViewController {
 
     private var areSubviewsReady: Bool = false
 
+    private var resignToken: NSObjectProtocol?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -62,6 +64,12 @@ class VideoPlayerViewController: UIViewController {
         }
 
         collectionView.backgroundColor = UIColor.black.withAlphaComponent(0.75)
+
+        let center = NotificationCenter.default
+        resignToken = center.addObserver(forName: .willResign, object: nil, queue: .main) { _ in
+            self.log.high("Resigning")
+            self.pause()
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -87,6 +95,12 @@ class VideoPlayerViewController: UIViewController {
         }
 
         areSubviewsReady = true
+    }
+
+    deinit {
+        if let resignToken = resignToken {
+            NotificationCenter.default.removeObserver(resignToken)
+        }
     }
 }
 

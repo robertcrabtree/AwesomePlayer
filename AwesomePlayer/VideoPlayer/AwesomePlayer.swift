@@ -22,7 +22,7 @@ public protocol AwesomePlayerDelegate: AnyObject {
 public class AwesomePlayer {
 
     public enum State {
-        case notReady
+        case none
         case idle
         case playing
         case paused
@@ -41,14 +41,14 @@ public class AwesomePlayer {
     private(set) var thumbs: [UIImage] = []
 
     public var duration: Double {
-        return state == .notReady ? 0.0 : item.duration.seconds
+        return state == .none ? 0.0 : item.duration.seconds
     }
 
     public var currentTime: Double {
-        return state == .notReady ? 0.0 : item.currentTime().seconds
+        return state == .none ? 0.0 : item.currentTime().seconds
     }
 
-    private(set) var state: State = .notReady
+    private(set) var state: State = .none
 
     private let url: URL
 
@@ -65,6 +65,8 @@ public class AwesomePlayer {
     private var timeObserverToken: Any?
 
     private var statusObserverToken: NSKeyValueObservation?
+
+    private var playerEndObserverToken: NSObjectProtocol?
 
     public init(url: URL, thumbInterval: Int, log: Log) {
 
@@ -84,18 +86,21 @@ public class AwesomePlayer {
         if let timeObserverToken = timeObserverToken {
             player.removeTimeObserver(timeObserverToken)
         }
+        if let playerEndObserverToken = playerEndObserverToken {
+            NotificationCenter.default.removeObserver(playerEndObserverToken)
+        }
         statusObserverToken?.invalidate()
     }
 
     public func getReady() throws {
-        guard state == .notReady else { return }
+        guard state == .none else { return }
         log.high("Player getting ready")
-        observePlayerEnd()
+        playerEndObserverToken = observePlayerEnd()
         statusObserverToken = observePlayerStatus()
     }
 
     public func play() throws {
-        guard state != .notReady else { throw Error.badState }
+        guard state != .none else { throw Error.badState }
         log.high("Start player")
 
         if state == .idle {
@@ -107,14 +112,14 @@ public class AwesomePlayer {
     }
 
     public func pause() throws {
-        guard state != .notReady else { throw Error.badState }
+        guard state != .none else { throw Error.badState }
         log.high("Pause player")
         state = .paused
         player.pause()
     }
 
     public func seek(to value: Double, completion: ((Bool) -> Void)? = nil) throws {
-        guard state != .notReady else { throw Error.badState }
+        guard state != .none else { throw Error.badState }
 
         log.low("Seeking to \(value)")
 
@@ -146,6 +151,9 @@ private extension AwesomePlayer {
 
     private func processPlayerReady() {
         log.high("Player ready")
+
+        guard thumbs.count == 0 else { return }
+
         do {
             try generateThumbs()
             state = .idle
@@ -178,9 +186,9 @@ private extension AwesomePlayer {
         log.high("Generated \(thumbs.count) thumbs")
     }
 
-    private func observePlayerEnd() {
-        let nc = NotificationCenter.default
-        nc.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { _ in
+    private func observePlayerEnd() -> NSObjectProtocol {
+        let center = NotificationCenter.default
+        return center.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { _ in
             self.log.high("Player ended")
             self.state = .idle
             self.delegate?.awesomePlayerEnded()
@@ -193,7 +201,7 @@ private extension AwesomePlayer {
             if player.status == .readyToPlay {
                 self.processPlayerReady()
             } else if player.status == .failed {
-                self.state = .notReady
+                self.state = .none
                 self.delegate?.awesomePlayerFailed(with: Error.internal)
             }
         }
