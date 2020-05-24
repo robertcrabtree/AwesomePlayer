@@ -14,6 +14,7 @@
 		D44FE961247A99DB008F323A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D44FE960247A99DB008F323A /* Assets.xcassets */; };
 		D44FE964247A99DB008F323A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D44FE962247A99DB008F323A /* LaunchScreen.storyboard */; };
 		D44FE96E247A9A8F008F323A /* AwesomePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FE96D247A9A8F008F323A /* AwesomePlayer.swift */; };
+		D44FE970247A9F67008F323A /* VideoThumbCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FE96F247A9F67008F323A /* VideoThumbCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		D44FE963247A99DB008F323A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D44FE965247A99DB008F323A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D44FE96D247A9A8F008F323A /* AwesomePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AwesomePlayer.swift; sourceTree = "<group>"; };
+		D44FE96F247A9F67008F323A /* VideoThumbCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoThumbCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				D44FE95D247A99D9008F323A /* Main.storyboard */,
 				D44FE959247A99D9008F323A /* SceneDelegate.swift */,
 				D44FE95B247A99D9008F323A /* VideoPlayerViewController.swift */,
+				D44FE96F247A9F67008F323A /* VideoThumbCell.swift */,
 			);
 			path = AwesomePlayer;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 				D44FE95C247A99D9008F323A /* VideoPlayerViewController.swift in Sources */,
 				D44FE958247A99D9008F323A /* AppDelegate.swift in Sources */,
 				D44FE95A247A99D9008F323A /* SceneDelegate.swift in Sources */,
+				D44FE970247A9F67008F323A /* VideoThumbCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
