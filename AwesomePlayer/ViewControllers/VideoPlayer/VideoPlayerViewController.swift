@@ -165,8 +165,8 @@ extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
         if isScrubbing {
             let totalDistance = CGFloat(player.thumbs.count) * thumbWidth
             let currentDistance = -thumbStripOffset.x + collectionView.contentOffset.x
-            let percent = min(1.0, max(0.0, currentDistance / totalDistance))
-            player.seek(to: Double(percent))
+            let ratio = min(1.0, max(0.0, currentDistance / totalDistance))
+            player.seek(to: Double(ratio))
         }
     }
 
