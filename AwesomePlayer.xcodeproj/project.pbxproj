@@ -16,6 +16,8 @@
 		D44FE96E247A9A8F008F323A /* AwesomePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FE96D247A9A8F008F323A /* AwesomePlayer.swift */; };
 		D44FE970247A9F67008F323A /* VideoThumbCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FE96F247A9F67008F323A /* VideoThumbCell.swift */; };
 		D44FE972247AA1FF008F323A /* video.MOV in Resources */ = {isa = PBXBuildFile; fileRef = D44FE971247AA1FF008F323A /* video.MOV */; };
+		D44FE974247AA360008F323A /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FE973247AA360008F323A /* UIViewController+Alert.swift */; };
+		D44FE976247AA539008F323A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FE975247AA539008F323A /* Log.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		D44FE96D247A9A8F008F323A /* AwesomePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AwesomePlayer.swift; sourceTree = "<group>"; };
 		D44FE96F247A9F67008F323A /* VideoThumbCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoThumbCell.swift; sourceTree = "<group>"; };
 		D44FE971247AA1FF008F323A /* video.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = video.MOV; sourceTree = "<group>"; };
+		D44FE973247AA360008F323A /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
+		D44FE975247AA539008F323A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,8 +71,10 @@
 				D44FE96D247A9A8F008F323A /* AwesomePlayer.swift */,
 				D44FE965247A99DB008F323A /* Info.plist */,
 				D44FE962247A99DB008F323A /* LaunchScreen.storyboard */,
+				D44FE975247AA539008F323A /* Log.swift */,
 				D44FE95D247A99D9008F323A /* Main.storyboard */,
 				D44FE959247A99D9008F323A /* SceneDelegate.swift */,
+				D44FE973247AA360008F323A /* UIViewController+Alert.swift */,
 				D44FE971247AA1FF008F323A /* video.MOV */,
 				D44FE95B247A99D9008F323A /* VideoPlayerViewController.swift */,
 				D44FE96F247A9F67008F323A /* VideoThumbCell.swift */,
@@ -151,6 +157,8 @@
 				D44FE96E247A9A8F008F323A /* AwesomePlayer.swift in Sources */,
 				D44FE95C247A99D9008F323A /* VideoPlayerViewController.swift in Sources */,
 				D44FE958247A99D9008F323A /* AppDelegate.swift in Sources */,
+				D44FE974247AA360008F323A /* UIViewController+Alert.swift in Sources */,
+				D44FE976247AA539008F323A /* Log.swift in Sources */,
 				D44FE95A247A99D9008F323A /* SceneDelegate.swift in Sources */,
 				D44FE970247A9F67008F323A /* VideoThumbCell.swift in Sources */,
 			);

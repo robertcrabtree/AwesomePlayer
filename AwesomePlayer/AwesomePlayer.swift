@@ -50,6 +50,8 @@ public class AwesomePlayer: NSObject {
 
     private let thumbInterval: Int
 
+    private let log: Log
+
     private let asset: AVAsset
 
     private let item: AVPlayerItem
@@ -60,7 +62,7 @@ public class AwesomePlayer: NSObject {
 
     private var statusObserverToken: NSKeyValueObservation?
 
-    public init(url: URL, thumbInterval: Int) {
+    public init(url: URL, thumbInterval: Int, log: Log) {
 
         let asset = AVAsset(url: url)
         let item = AVPlayerItem(asset: asset)
@@ -68,15 +70,12 @@ public class AwesomePlayer: NSObject {
 
         self.url = url
         self.thumbInterval = thumbInterval
+        self.log = log
         self.asset = asset
         self.item = item
         self.player = player
 
         super.init()
-
-        observePlayerEnd()
-        statusObserverToken = observePlayerStatus()
-        timeObserverToken = observeTimes()
     }
 
     deinit {
@@ -86,24 +85,31 @@ public class AwesomePlayer: NSObject {
         statusObserverToken?.invalidate()
     }
 
-    public func makeLayer() -> Layer {
-        return Layer(player: player)
+    public func getReady() throws {
+        guard state == .notReady else { return }
+        log.high("Player getting ready")
+        observePlayerEnd()
+        statusObserverToken = observePlayerStatus()
     }
 
     public func play() throws {
         guard state != .notReady else { throw Error.badState }
+        log.high("Start player")
         state = .playing
         player.play()
     }
 
     public func pause() throws {
         guard state != .notReady else { throw Error.badState }
+        log.high("Pause player")
         state = .paused
         player.pause()
     }
 
     public func seek(to value: Double, completion: ((Bool) -> Void)? = nil) throws {
         guard state != .notReady else { throw Error.badState }
+
+        log.low("Seeking to \(value)")
 
         let duration = item.duration.seconds
         let time = CMTime(
@@ -114,6 +120,10 @@ public class AwesomePlayer: NSObject {
             completion?(finished)
         }
     }
+
+    public func makeLayer() -> Layer {
+        return Layer(player: player)
+    }
 }
 
 // MARK: - Action methods
@@ -121,6 +131,7 @@ public class AwesomePlayer: NSObject {
 private extension AwesomePlayer {
 
     @objc private func playerDidEnd() {
+        log.high("Player ended")
         state = .idle
         delegate?.awesomePlayerEnded()
     }
@@ -131,9 +142,11 @@ private extension AwesomePlayer {
 private extension AwesomePlayer {
 
     private func processPlayerReady() {
+        log.high("Awesome player ready")
         do {
             try generateThumbs()
             state = .idle
+            timeObserverToken = observeTimes()
             delegate?.awesomePlayerReady()
         } catch {
             delegate?.awesomePlayerFailed(with: Error.thumbGeneration)
@@ -156,6 +169,8 @@ private extension AwesomePlayer {
             thumbs.append(.init(cgImage: image))
             timeValue += thumbInterval
         } while timeValue < duration
+
+        log.high("Generated \(thumbs.count) thumbs")
     }
 
     private func observePlayerEnd() {
@@ -183,6 +198,7 @@ private extension AwesomePlayer {
         let timeInSeconds = 0.001
         let time = CMTime(seconds: timeInSeconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         return player.addPeriodicTimeObserver(forInterval: time, queue: .main) { [weak self] time in
+            self?.log.low("Time ready: \(time.seconds)")
             self?.delegate?.awesomePlayerTimeValueReady(time.seconds)
         }
     }
