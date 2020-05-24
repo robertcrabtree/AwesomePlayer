@@ -64,8 +64,8 @@ public class AwesomePlayer {
         /**
          The state that indicates the player is stopped.
 
-         The player will enter the `stopped` state once the player is ready. The player will also move to the `stopped` state
-         when the clip has finished playing.
+         The player will enter the `stopped` state once the player is ready. The player will also move to the `stopped`
+         state when the clip has finished playing.
          */
         case stopped
 
@@ -120,8 +120,8 @@ public class AwesomePlayer {
     /**
      The video clip thumbnails.
 
-     The thumbnails are ready once the `awesomePlayerReady()` delegate method is called. The player will generate a number of
-     thumbnails according to the interval you specify in the `init()` method.
+     The thumbnails are ready once the `awesomePlayerReady()` delegate method is called. The player will generate a
+     number of thumbnails according to the interval you specify in the `init()` method.
      */
     private(set) var thumbs: [UIImage] = []
 
@@ -175,7 +175,8 @@ public class AwesomePlayer {
      The init method
 
      - Parameter url: The URL of the video clip to play.
-     - Parameter thumbInterval: The thumbnail interval in seconds. The player will generate a thumbnail every thumbInterval seconds.
+     - Parameter thumbInterval: The thumbnail interval in seconds. The player will generate a thumbnail every
+     thumbInterval seconds.
      - Parameter log: The log utility.
      */
     public init(url: URL, thumbInterval: Int, log: Log) {
@@ -254,7 +255,8 @@ public class AwesomePlayer {
     /**
      Advances the player to the specified position.
 
-     - Parameter value: A value between 0.0 and 1.0. 0.0 indicates the beginning of the clip, 1.0 indicates the end of the clip.
+     - Parameter value: A value between 0.0 and 1.0. 0.0 indicates the beginning of the clip, 1.0 indicates the end
+     of the clip.
      - Parameter completion: A completion block that is called when complete..
 
      - Throws: An AwesomePlayer.invalidState if the player is not ready
