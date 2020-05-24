@@ -261,9 +261,12 @@ extension VideoPlayerViewController {
 
     private func togglePlay() {
 
-        switch player.state {
-        case .notReady:
+        guard player.isReadyToPlay else {
             showOkAlert(title: "Player is not ready", message: nil)
+            return
+        }
+
+        switch player.state {
         case .stopped, .paused:
             play()
         case .playing:

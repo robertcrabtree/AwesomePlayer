@@ -57,11 +57,6 @@ public class AwesomePlayer {
     public enum State {
 
         /**
-         The initial state before the player is ready.
-         */
-        case notReady
-
-        /**
          The state that indicates the player is stopped.
 
          The player will enter the `stopped` state once the player is ready. The player will also move to the `stopped`
@@ -129,20 +124,27 @@ public class AwesomePlayer {
      The length of the video clip in seconds.
      */
     public var duration: Double {
-        return state == .notReady ? 0.0 : item.duration.seconds
+        return item.status == .readyToPlay ? item.duration.seconds : 0.0
     }
 
     /**
      The current time of the video clip in seconds.
      */
     public var currentTime: Double {
-        return state == .notReady ? 0.0 : item.currentTime().seconds
+        return item.status == .readyToPlay ? item.currentTime().seconds : 0.0
     }
 
     /**
      The current state of the player.
      */
-    private(set) var state: State = .notReady
+    private(set) var state: State = .stopped
+
+    /**
+     Indicates that the player is ready to play
+     */
+    var isReadyToPlay: Bool {
+        return item.status == .readyToPlay
+    }
 
     // MARK: - Private properties
 
@@ -157,6 +159,10 @@ public class AwesomePlayer {
     private let item: AVPlayerItem
 
     private let player: AVPlayer
+
+    private var chasePosition: Double = 0.0
+
+    private var isSeekInProgress: Bool = false
 
     private var timeObserverToken: Any?
 
@@ -210,7 +216,7 @@ public class AwesomePlayer {
      - Throws: An AwesomePlayer.invalidState if the player is already ready
      */
     public func getReady() throws {
-        guard state == .notReady else { throw Error.invalidState }
+        guard item.status != .readyToPlay else { throw Error.invalidState }
         log.high("Player getting ready")
         playerEndObserverToken = observePlayerEnd()
         statusObserverToken = observePlayerStatus()
@@ -225,7 +231,7 @@ public class AwesomePlayer {
      - Throws: An AwesomePlayer.invalidState if the player is not ready
      */
     public func play() throws {
-        guard state != .notReady else { throw Error.invalidState }
+        guard item.status == .readyToPlay else { throw Error.invalidState }
         log.high("Start player")
 
         // If we are at the end of the clip we should seek to the beginning so we can play
@@ -244,7 +250,7 @@ public class AwesomePlayer {
      - Throws: An AwesomePlayer.invalidState if the player is not ready
      */
     public func pause() throws {
-        guard state != .notReady else { throw Error.invalidState }
+        guard item.status == .readyToPlay else { throw Error.invalidState }
         log.high("Pause player")
         state = .paused
         player.pause()
@@ -253,16 +259,34 @@ public class AwesomePlayer {
     /**
      Advances the player to the specified position.
 
-     - Parameter value: A value between 0.0 and 1.0. 0.0 indicates the beginning of the clip, 1.0 indicates the end
+     - Parameter position: A value between 0.0 and 1.0. 0.0 indicates the beginning of the clip, 1.0 indicates the end
      of the clip.
-     - Parameter completion: A completion block that is called when complete..
 
      - Throws: An AwesomePlayer.invalidState if the player is not ready
      */
-    public func seek(to value: Double, completion: ((Bool) -> Void)? = nil) throws {
-        guard state != .notReady else { throw Error.invalidState }
+    public func seek(to position: Double) throws {
+        guard item.status == .readyToPlay else { throw Error.invalidState }
 
-        log.low("Seeking to \(value)")
+        log.low("Seeking to \(position)")
+
+        // Don't seek to the same position as we did previously
+        guard position != chasePosition else { return }
+
+        // Save the position in case we are already seeking. We will seek to this position
+        // after seek completes.
+        chasePosition = position
+
+        // Don't seek to this position until seek is complete
+        guard !isSeekInProgress else { return }
+
+        actuallySeek()
+    }
+
+    public func actuallySeek() {
+
+        let thisPosition = chasePosition
+
+        isSeekInProgress = true
 
         // If play hasn't been called but seeking is occurring then go to the paused state.
         // If play is called then it will play from the time we seeked to.
@@ -272,17 +296,30 @@ public class AwesomePlayer {
 
         let duration = item.duration.seconds
         let time = CMTime(
-            value: CMTimeValue(duration * value * Double(NSEC_PER_SEC)),
+            value: CMTimeValue(duration * thisPosition * Double(NSEC_PER_SEC)),
             timescale: CMTimeScale(NSEC_PER_SEC)
         )
-        player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+
+        player.pause()
+
+        player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
 
             // If we arrived to the end of the clip then move out of the playing/paused state.
             // When play is called again the clip will start at the beginning.
-            if finished && self.item.duration.seconds == self.item.currentTime().seconds {
+            if self.item.duration.seconds == self.item.currentTime().seconds {
+                self.isSeekInProgress = false
                 self.state = .stopped
+                self.delegate?.awesomePlayerClipEnded()
+            } else {
+                if thisPosition != self.chasePosition {
+                    self.actuallySeek()
+                } else {
+                    self.isSeekInProgress = false
+                    if self.state == .playing {
+                        self.player.play()
+                    }
+                }
             }
-            completion?(finished)
         }
     }
 }
@@ -346,7 +383,6 @@ private extension AwesomePlayer {
             if player.status == .readyToPlay {
                 self.processPlayerReady()
             } else if player.status == .failed {
-                self.state = .notReady
                 self.delegate?.awesomePlayerFailed(with: Error.internal)
             }
         }
