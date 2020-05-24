@@ -154,6 +154,7 @@ extension VideoPlayerViewController: UICollectionViewDataSource {
 extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        guard !isScrubbing else { return }
         log.high("Start scrubbing")
         isScrubbing = true
         playAfterScrubbing = player.state == .playing
