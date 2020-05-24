@@ -85,11 +85,6 @@ public class AwesomePlayer {
     public enum Error: Swift.Error {
 
         /**
-         Indicates a method was called in the wrong state.
-         */
-        case invalidState
-
-        /**
          Indicates that the player failed to generate thumbnails.
          */
         case thumbGeneration
@@ -212,11 +207,9 @@ public class AwesomePlayer {
 
      When the player is ready it will call the `awesomePlayerReady()` delegate method. The `play()`, `pause()`,
      and `seek(to:)` methods cannot be called until the player is ready.
-
-     - Throws: An AwesomePlayer.invalidState if the player is already ready
      */
-    public func getReady() throws {
-        guard item.status != .readyToPlay else { throw Error.invalidState }
+    public func getReady() {
+        guard item.status != .readyToPlay else { return }
         log.high("Player getting ready")
         playerEndObserverToken = observePlayerEnd()
         statusObserverToken = observePlayerStatus()
@@ -227,11 +220,9 @@ public class AwesomePlayer {
 
      When the `play()` method is called the player will start playing the clip. When the clip has finished playing
      the `awesomePlayerClipEnded()` delegate method is called.
-
-     - Throws: An AwesomePlayer.invalidState if the player is not ready
      */
-    public func play() throws {
-        guard item.status == .readyToPlay else { throw Error.invalidState }
+    public func play() {
+        guard item.status == .readyToPlay else { return }
         log.high("Start player")
         state = .playing
         player.play()
@@ -239,11 +230,9 @@ public class AwesomePlayer {
 
     /**
      Pauses the player.
-
-     - Throws: An AwesomePlayer.invalidState if the player is not ready
      */
-    public func pause() throws {
-        guard item.status == .readyToPlay else { throw Error.invalidState }
+    public func pause() {
+        guard item.status == .readyToPlay else { return }
         log.high("Pause player")
         state = .paused
         player.pause()
@@ -254,11 +243,9 @@ public class AwesomePlayer {
 
      - Parameter position: A value between 0.0 and 1.0. 0.0 indicates the beginning of the clip, 1.0 indicates the end
      of the clip.
-
-     - Throws: An AwesomePlayer.invalidState if the player is not ready
      */
-    public func seek(to position: Double) throws {
-        guard item.status == .readyToPlay else { throw Error.invalidState }
+    public func seek(to position: Double) {
+        guard item.status == .readyToPlay else { return }
 
         log.low("Seeking to \(position)")
 

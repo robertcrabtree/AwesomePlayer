@@ -72,11 +72,7 @@ class VideoPlayerViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
 
-        do {
-            try player.getReady()
-        } catch {
-            log.error("Player failed to get ready with error: \(error)")
-        }
+        player.getReady()
 
         collectionView.backgroundColor = UIColor.black.withAlphaComponent(0.75)
 
@@ -161,7 +157,7 @@ extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
         log.high("Start scrubbing")
         isScrubbing = true
         playAfterScrubbing = player.state == .playing
-        try! player.pause()
+        player.pause()
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -169,11 +165,7 @@ extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
             let totalDistance = CGFloat(player.thumbs.count) * thumbWidth
             let currentDistance = -thumbStripOffset.x + collectionView.contentOffset.x
             let percent = min(1.0, max(0.0, currentDistance / totalDistance))
-            do {
-                try player.seek(to: Double(percent))
-            } catch {
-                showOkAlert(title: "Scrubbing failed", message: nil)
-            }
+            player.seek(to: Double(percent))
         }
     }
 
@@ -241,14 +233,14 @@ extension VideoPlayerViewController {
 
     private func play() {
         if player.currentTime == player.duration {
-            try! player.seek(to: 0.0)
+            player.seek(to: 0.0)
         }
-        try! player.play()
+        player.play()
         playButton.setImage(pauseButtonImage, for: .normal)
     }
 
     private func pause() {
-        try! player.pause()
+        player.pause()
         playButton.setImage(playButtonImage, for: .normal)
     }
 
@@ -277,7 +269,7 @@ extension VideoPlayerViewController {
         isScrubbing = false
         if playAfterScrubbing {
             if player.currentTime != player.duration {
-                try! player.play()
+                player.play()
             } else {
                 playButton.setImage(playButtonImage, for: .normal)
             }
