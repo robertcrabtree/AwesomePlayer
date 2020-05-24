@@ -103,6 +103,8 @@ public class AwesomePlayer {
         guard state != .none else { throw Error.badState }
         log.high("Start player")
 
+        // If we are at the end of the clip we should seek to the beginning so we can play
+        // from the beginning.
         if state == .idle {
             player.seek(to: .zero)
         }
@@ -123,6 +125,8 @@ public class AwesomePlayer {
 
         log.low("Seeking to \(value)")
 
+        // If play hasn't been called but seeking is occurring then go to the paused state.
+        // If play is called then it will play from the time we seeked to.
         if state == .idle {
             state = .paused
         }
@@ -133,6 +137,9 @@ public class AwesomePlayer {
             timescale: CMTimeScale(NSEC_PER_SEC)
         )
         player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+
+            // If we arrived to the end of the clip then move out of the playing/paused state.
+            // When play is called again the clip will start at the beginning.
             if finished && self.item.duration.seconds == self.item.currentTime().seconds {
                 self.state = .idle
             }
@@ -152,6 +159,9 @@ private extension AwesomePlayer {
     private func processPlayerReady() {
         log.high("Player ready")
 
+        // if the app goes to the background this method will get called again
+        // when re-entering the foreground. if we already have thumbs then
+        // we don't need to do anything
         guard thumbs.count == 0 else { return }
 
         do {
