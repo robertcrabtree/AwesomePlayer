@@ -29,7 +29,7 @@ class VideoPlayerViewController: UIViewController {
 
     private lazy var videoURL: URL = Bundle.main.url(forResource: "video", withExtension: "MOV")!
 
-    private lazy var log: Log = Log(enabledLevels: .all)
+    private lazy var log: Log = Log(enabledLevels: .allButLow)
 
     private lazy var player: AwesomePlayer = AwesomePlayer(
         url: videoURL,
@@ -60,6 +60,8 @@ class VideoPlayerViewController: UIViewController {
         } catch {
             log.error("Player failed to get ready with error: \(error)")
         }
+
+        collectionView.backgroundColor = UIColor.black.withAlphaComponent(0.75)
     }
 
     override func viewDidLayoutSubviews() {

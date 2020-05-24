@@ -96,7 +96,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="c0b-3q-B84" firstAttribute="top" secondItem="xOs-Eh-Hva" secondAttribute="bottom" constant="20" id="3zB-9T-EN0"/>
                             <constraint firstItem="geU-BA-Lad" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8Ee-YM-ZD1"/>
