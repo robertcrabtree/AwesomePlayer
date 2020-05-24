@@ -29,7 +29,7 @@ public class AwesomePlayer {
     }
 
     public enum Error: Swift.Error {
-        case badState
+        case invalidState
         case thumbGeneration
         case `internal`
     }
@@ -100,7 +100,7 @@ public class AwesomePlayer {
     }
 
     public func play() throws {
-        guard state != .none else { throw Error.badState }
+        guard state != .none else { throw Error.invalidState }
         log.high("Start player")
 
         // If we are at the end of the clip we should seek to the beginning so we can play
@@ -114,14 +114,14 @@ public class AwesomePlayer {
     }
 
     public func pause() throws {
-        guard state != .none else { throw Error.badState }
+        guard state != .none else { throw Error.invalidState }
         log.high("Pause player")
         state = .paused
         player.pause()
     }
 
     public func seek(to value: Double, completion: ((Bool) -> Void)? = nil) throws {
-        guard state != .none else { throw Error.badState }
+        guard state != .none else { throw Error.invalidState }
 
         log.low("Seeking to \(value)")
 
