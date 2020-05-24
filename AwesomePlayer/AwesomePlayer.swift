@@ -214,8 +214,9 @@ private extension AwesomePlayer {
         let timeInSeconds = 0.001
         let time = CMTime(seconds: timeInSeconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         return player.addPeriodicTimeObserver(forInterval: time, queue: .main) { [weak self] time in
-            self?.log.low("Time ready: \(time.seconds)")
-            self?.delegate?.awesomePlayerTimeValueReady(time.seconds)
+            guard let self = self else { return }
+            self.log.low("Time ready: \(time.seconds)")
+            self.delegate?.awesomePlayerTimeValueReady(time.seconds)
         }
     }
 }
