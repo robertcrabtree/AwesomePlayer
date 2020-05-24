@@ -40,7 +40,7 @@ public protocol AwesomePlayerDelegate: AnyObject {
     func awesomePlayerTimeValueReady(_ seconds: Double)
 }
 
-// MARK: - Props and public methods
+// MARK: - AwesomePlayer definition
 
 /**
  The best video player there is.

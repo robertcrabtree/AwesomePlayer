@@ -8,12 +8,24 @@
 
 import UIKit
 
+// MARK: - VideoPlayerViewController definition
+
 class VideoPlayerViewController: UIViewController {
+
+    // MARK: - IBOutlets
 
     @IBOutlet weak var videoView: UIView!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var playButton: UIButton!
+
+    // MARK: - Dependencies
+
+    public var videoURL: URL!
+
+    public var log: Log!
+
+    // MARK: - Private properties
 
     private lazy var playButtonImage: UIImage = {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .bold, scale: .large)
@@ -24,10 +36,6 @@ class VideoPlayerViewController: UIViewController {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .bold, scale: .large)
         return UIImage(systemName: "pause.circle", withConfiguration: imageConfig) ?? UIImage()
     }()
-
-    public var videoURL: URL!
-
-    public var log: Log!
 
     private let thumbWidth: CGFloat = 100
 
@@ -44,6 +52,8 @@ class VideoPlayerViewController: UIViewController {
     private var areSubviewsReady: Bool = false
 
     private var resignToken: NSObjectProtocol?
+
+    // MARK: - View life cycle methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,6 +114,8 @@ class VideoPlayerViewController: UIViewController {
     }
 }
 
+// MARK: - UICollectionViewDataSource methods
+
 extension VideoPlayerViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -133,6 +145,8 @@ extension VideoPlayerViewController: UICollectionViewDataSource {
         return cell
     }
 }
+
+// MARK: - UICollectionViewDelegateFlowLayout methods
 
 extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
 
@@ -167,6 +181,8 @@ extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+// MARK: - Action methods
+
 extension VideoPlayerViewController {
 
     @IBAction func onPlayButtonTouched(_ sender: UIButton) {
@@ -183,6 +199,8 @@ extension VideoPlayerViewController {
         }
     }
 }
+
+// MARK: - AwesomePlayerDelegate methods
 
 extension VideoPlayerViewController: AwesomePlayerDelegate {
 
@@ -211,6 +229,8 @@ extension VideoPlayerViewController: AwesomePlayerDelegate {
         }
     }
 }
+
+// MARK: - Private methods
 
 extension VideoPlayerViewController {
 
