@@ -19,7 +19,7 @@ public protocol AwesomePlayerDelegate: AnyObject {
 
 // MARK: - Props and public methods
 
-public class AwesomePlayer: NSObject {
+public class AwesomePlayer {
 
     public enum State {
         case notReady
@@ -78,8 +78,6 @@ public class AwesomePlayer: NSObject {
         self.asset = asset
         self.item = item
         self.player = player
-
-        super.init()
     }
 
     deinit {

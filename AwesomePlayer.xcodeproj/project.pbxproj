@@ -47,6 +47,74 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D43E7E9E247ABE0000E27F50 /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				D44FE957247A99D9008F323A /* AppDelegate.swift */,
+				D44FE959247A99D9008F323A /* SceneDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
+		D43E7E9F247ABE1500E27F50 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				D44FE975247AA539008F323A /* Log.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		D43E7EA0247ABE2200E27F50 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D44FE973247AA360008F323A /* UIViewController+Alert.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D43E7EA1247ABE2C00E27F50 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				D43E7EA2247ABE3400E27F50 /* VideoPlayer */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		D43E7EA2247ABE3400E27F50 /* VideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				D44FE95B247A99D9008F323A /* VideoPlayerViewController.swift */,
+				D44FE96F247A9F67008F323A /* VideoThumbCell.swift */,
+			);
+			path = VideoPlayer;
+			sourceTree = "<group>";
+		};
+		D43E7EA3247ABE4A00E27F50 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D44FE960247A99DB008F323A /* Assets.xcassets */,
+				D44FE971247AA1FF008F323A /* video.MOV */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D43E7EA4247ABE6100E27F50 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				D44FE962247A99DB008F323A /* LaunchScreen.storyboard */,
+				D44FE95D247A99D9008F323A /* Main.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		D43E7EA5247ABE9100E27F50 /* VideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				D44FE96D247A9A8F008F323A /* AwesomePlayer.swift */,
+			);
+			path = VideoPlayer;
+			sourceTree = "<group>";
+		};
 		D44FE94B247A99D9008F323A = {
 			isa = PBXGroup;
 			children = (
@@ -66,18 +134,14 @@
 		D44FE956247A99D9008F323A /* AwesomePlayer */ = {
 			isa = PBXGroup;
 			children = (
-				D44FE957247A99D9008F323A /* AppDelegate.swift */,
-				D44FE960247A99DB008F323A /* Assets.xcassets */,
-				D44FE96D247A9A8F008F323A /* AwesomePlayer.swift */,
+				D43E7E9E247ABE0000E27F50 /* Delegates */,
+				D43E7EA0247ABE2200E27F50 /* Extensions */,
 				D44FE965247A99DB008F323A /* Info.plist */,
-				D44FE962247A99DB008F323A /* LaunchScreen.storyboard */,
-				D44FE975247AA539008F323A /* Log.swift */,
-				D44FE95D247A99D9008F323A /* Main.storyboard */,
-				D44FE959247A99D9008F323A /* SceneDelegate.swift */,
-				D44FE973247AA360008F323A /* UIViewController+Alert.swift */,
-				D44FE971247AA1FF008F323A /* video.MOV */,
-				D44FE95B247A99D9008F323A /* VideoPlayerViewController.swift */,
-				D44FE96F247A9F67008F323A /* VideoThumbCell.swift */,
+				D43E7EA3247ABE4A00E27F50 /* Resources */,
+				D43E7EA4247ABE6100E27F50 /* Storyboards */,
+				D43E7E9F247ABE1500E27F50 /* Utils */,
+				D43E7EA5247ABE9100E27F50 /* VideoPlayer */,
+				D43E7EA1247ABE2C00E27F50 /* ViewControllers */,
 			);
 			path = AwesomePlayer;
 			sourceTree = "<group>";
