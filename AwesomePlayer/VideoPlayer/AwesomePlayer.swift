@@ -140,17 +140,6 @@ public class AwesomePlayer {
     }
 }
 
-// MARK: - Action methods
-
-private extension AwesomePlayer {
-
-    @objc private func playerDidEnd() {
-        log.high("Player ended")
-        state = .idle
-        delegate?.awesomePlayerEnded()
-    }
-}
-
 // MARK: - Private methods
 
 private extension AwesomePlayer {
@@ -168,6 +157,8 @@ private extension AwesomePlayer {
     }
 
     private func generateThumbs() throws {
+
+        log.high("Generating thumbs")
 
         let duration = Int(item.duration.seconds)
 
@@ -188,12 +179,12 @@ private extension AwesomePlayer {
     }
 
     private func observePlayerEnd() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(playerDidEnd),
-            name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-            object: item
-        )
+        let nc = NotificationCenter.default
+        nc.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { _ in
+            self.log.high("Player ended")
+            self.state = .idle
+            self.delegate?.awesomePlayerEnded()
+        }
     }
 
     private func observePlayerStatus() -> NSKeyValueObservation {
