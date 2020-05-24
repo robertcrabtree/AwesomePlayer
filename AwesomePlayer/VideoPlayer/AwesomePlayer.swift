@@ -13,7 +13,7 @@ import AVKit
 public protocol AwesomePlayerDelegate: AnyObject {
     func awesomePlayerReady()
     func awesomePlayerEnded()
-    func awesomePlayerFailed(with error: Error)
+    func awesomePlayerFailed(with error: AwesomePlayer.Error)
     func awesomePlayerTimeValueReady(_ seconds: Double)
 }
 
@@ -38,7 +38,7 @@ public class AwesomePlayer {
 
     public weak var delegate: AwesomePlayerDelegate?
 
-    public var thumbs: [UIImage] = []
+    private(set) var thumbs: [UIImage] = []
 
     public var duration: Double {
         return state == .notReady ? 0.0 : item.duration.seconds

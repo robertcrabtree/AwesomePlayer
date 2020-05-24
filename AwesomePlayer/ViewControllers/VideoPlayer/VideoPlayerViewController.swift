@@ -180,7 +180,7 @@ extension VideoPlayerViewController: AwesomePlayerDelegate {
         playButton.setImage(playButtonImage, for: .normal)
     }
 
-    func awesomePlayerFailed(with error: Error) {
+    func awesomePlayerFailed(with error: AwesomePlayer.Error) {
         showOkAlert(title: "Awesome player failed", message: "\(error)")
     }
 
