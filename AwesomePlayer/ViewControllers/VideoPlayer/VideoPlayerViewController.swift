@@ -45,7 +45,7 @@ class VideoPlayerViewController: UIViewController {
         log: log
     )
 
-    private var initialContentOffset: CGPoint = .zero
+    private var thumbStripOffset: CGPoint = .zero
 
     private var isScrubbing: Bool = false
 
@@ -101,7 +101,7 @@ class VideoPlayerViewController: UIViewController {
                 right: collectionView.bounds.width / 2
             )
 
-            initialContentOffset = collectionView.contentOffset
+            thumbStripOffset = collectionView.contentOffset
         }
 
         areSubviewsReady = true
@@ -158,7 +158,7 @@ extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if isScrubbing {
             let totalDistance = CGFloat(player.thumbs.count) * thumbWidth
-            let currentDistance = -initialContentOffset.x + collectionView.contentOffset.x
+            let currentDistance = -thumbStripOffset.x + collectionView.contentOffset.x
             let percent = min(1.0, max(0.0, currentDistance / totalDistance))
             do {
                 try player.seek(to: Double(percent))
@@ -223,8 +223,8 @@ extension VideoPlayerViewController: AwesomePlayerDelegate {
             let percent = CGFloat(seconds / player.duration)
             let totalDistance = CGFloat(player.thumbs.count) * thumbWidth
             collectionView.contentOffset = CGPoint(
-                x: initialContentOffset.x + totalDistance * percent,
-                y: initialContentOffset.y
+                x: thumbStripOffset.x + totalDistance * percent,
+                y: thumbStripOffset.y
             )
         }
     }
