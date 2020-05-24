@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		D44FE958247A99D9008F323A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FE957247A99D9008F323A /* AppDelegate.swift */; };
 		D44FE95A247A99D9008F323A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FE959247A99D9008F323A /* SceneDelegate.swift */; };
-		D44FE95C247A99D9008F323A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FE95B247A99D9008F323A /* ViewController.swift */; };
+		D44FE95C247A99D9008F323A /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FE95B247A99D9008F323A /* VideoPlayerViewController.swift */; };
 		D44FE95F247A99D9008F323A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D44FE95D247A99D9008F323A /* Main.storyboard */; };
 		D44FE961247A99DB008F323A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D44FE960247A99DB008F323A /* Assets.xcassets */; };
 		D44FE964247A99DB008F323A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D44FE962247A99DB008F323A /* LaunchScreen.storyboard */; };
@@ -20,7 +20,7 @@
 		D44FE954247A99D9008F323A /* AwesomePlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AwesomePlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D44FE957247A99D9008F323A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D44FE959247A99D9008F323A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		D44FE95B247A99D9008F323A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D44FE95B247A99D9008F323A /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		D44FE95E247A99D9008F323A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D44FE960247A99DB008F323A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D44FE963247A99DB008F323A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -65,7 +65,7 @@
 				D44FE962247A99DB008F323A /* LaunchScreen.storyboard */,
 				D44FE95D247A99D9008F323A /* Main.storyboard */,
 				D44FE959247A99D9008F323A /* SceneDelegate.swift */,
-				D44FE95B247A99D9008F323A /* ViewController.swift */,
+				D44FE95B247A99D9008F323A /* VideoPlayerViewController.swift */,
 			);
 			path = AwesomePlayer;
 			sourceTree = "<group>";
@@ -142,7 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D44FE96E247A9A8F008F323A /* AwesomePlayer.swift in Sources */,
-				D44FE95C247A99D9008F323A /* ViewController.swift in Sources */,
+				D44FE95C247A99D9008F323A /* VideoPlayerViewController.swift in Sources */,
 				D44FE958247A99D9008F323A /* AppDelegate.swift in Sources */,
 				D44FE95A247A99D9008F323A /* SceneDelegate.swift in Sources */,
 			);

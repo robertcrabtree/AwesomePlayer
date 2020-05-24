@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  VideoPlayerViewController.swift
 //  AwesomePlayer
 //
 //  Created by Rob Crabtree on 5/24/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class VideoPlayerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
