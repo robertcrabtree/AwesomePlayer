@@ -38,10 +38,16 @@ class VideoPlayerViewController: UIViewController {
     }()
 
     private let thumbWidth: CGFloat = 100
+    private let thumbInterval: Int = 5
+
+    private var thumbCount: Int {
+        return Int(player.duration) / thumbInterval
+    }
+
+    private let thumbCache = NSCache<NSNumber, UIImage>()
 
     private lazy var player: AwesomePlayer = AwesomePlayer(
         url: videoURL,
-        thumbInterval: 5,
         layer: videoLayer,
         log: log
     )
@@ -128,7 +134,7 @@ extension VideoPlayerViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        return player.thumbs.count
+        return thumbCount
     }
 
     func collectionView(
@@ -141,8 +147,18 @@ extension VideoPlayerViewController: UICollectionViewDataSource {
             for: indexPath
         )
 
-        if let videoThumbCell = cell as? VideoThumbCell {
-            videoThumbCell.imageView.image = player.thumbs[indexPath.item]
+        if let cell = cell as? VideoThumbCell {
+            cell.imageView.image = nil
+            if let image = thumbCache.object(forKey: NSNumber(value: indexPath.item)) {
+                cell.imageView.image = image
+            } else {
+                generateThumb(at: indexPath) { [weak self] image in
+                    self?.thumbCache.setObject(image, forKey: NSNumber(value: indexPath.item))
+                    if let cell = collectionView.cellForItem(at: indexPath) as? VideoThumbCell {
+                        cell.imageView.image = image
+                    }
+                }
+            }
         }
 
         return cell
@@ -163,7 +179,7 @@ extension VideoPlayerViewController: UICollectionViewDelegateFlowLayout {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if isScrubbing {
-            let totalDistance = CGFloat(player.thumbs.count) * thumbWidth
+            let totalDistance = CGFloat(thumbCount) * thumbWidth
             let currentDistance = -thumbStripOffset.x + collectionView.contentOffset.x
             let ratio = min(1.0, max(0.0, currentDistance / totalDistance))
             player.seek(to: Double(ratio))
@@ -219,7 +235,7 @@ extension VideoPlayerViewController: AwesomePlayerDelegate {
 
         if !isScrubbing {
             let ratio = CGFloat(seconds / player.duration)
-            let totalDistance = CGFloat(player.thumbs.count) * thumbWidth
+            let totalDistance = CGFloat(thumbCount) * thumbWidth
             collectionView.contentOffset = CGPoint(
                 x: thumbStripOffset.x + totalDistance * ratio,
                 y: thumbStripOffset.y
@@ -275,6 +291,21 @@ extension VideoPlayerViewController {
                 playButton.setImage(playButtonImage, for: .normal)
             }
             playAfterScrubbing = false
+        }
+    }
+
+    private func generateThumb(at indexPath: IndexPath, then handle: @escaping (UIImage) -> Void) {
+        let queue = DispatchQueue.init(label: "com.player.awesome.thumb")
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            do {
+                let image = try self.player.generateThumb(at: indexPath.item * self.thumbInterval)
+                DispatchQueue.main.async {
+                    handle(image)
+                }
+            } catch {
+                self.log.error("Failed to generate thumb")
+            }
         }
     }
 }

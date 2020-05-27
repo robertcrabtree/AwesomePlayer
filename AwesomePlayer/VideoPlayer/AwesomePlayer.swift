@@ -85,7 +85,7 @@ public class AwesomePlayer {
     public enum Error: Swift.Error {
 
         /**
-         Indicates that the player failed to generate thumbnails.
+         Indicates that the player failed to generate a thumbnail.
          */
         case thumbGeneration
 
@@ -106,14 +106,6 @@ public class AwesomePlayer {
      The delegate property.
      */
     public weak var delegate: AwesomePlayerDelegate?
-
-    /**
-     The video clip thumbnails.
-
-     The thumbnails are ready once the `awesomePlayerReady()` delegate method is called. The player will generate a
-     number of thumbnails according to the interval you specify in the `init()` method.
-     */
-    private(set) var thumbs: [UIImage] = []
 
     /**
      The length of the video clip in seconds.
@@ -145,8 +137,6 @@ public class AwesomePlayer {
 
     private let url: URL
 
-    private let thumbInterval: Int
-
     private let log: Log
 
     private let asset: AVAsset
@@ -171,12 +161,10 @@ public class AwesomePlayer {
      The init method
 
      - Parameter url: The URL of the video clip to play.
-     - Parameter thumbInterval: The thumbnail interval in seconds. The player will generate a thumbnail every
-     thumbInterval seconds.
      - Parameter layer: The layer to render the video to.
      - Parameter log: The log utility.
      */
-    public init(url: URL, thumbInterval: Int, layer: Layer, log: Log) {
+    public init(url: URL, layer: Layer, log: Log) {
 
         let asset = AVAsset(url: url)
         let item = AVPlayerItem(asset: asset)
@@ -185,7 +173,6 @@ public class AwesomePlayer {
         layer.player = player
 
         self.url = url
-        self.thumbInterval = thumbInterval
         self.log = log
         self.asset = asset
         self.item = item
@@ -267,6 +254,27 @@ public class AwesomePlayer {
 
         actuallySeek()
     }
+
+    /**
+     Generates a thumbnail for the given time value
+
+     - Throws: An error if thumb generation fails
+     */
+    public func generateThumb(at second: Int) throws -> UIImage {
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+
+        let time = CMTime(value: CMTimeValue(second), timescale: 1)
+
+        do {
+            let image = try generator.copyCGImage(at: time, actualTime: nil)
+            return UIImage(cgImage: image)
+        } catch {
+            log.error("Failed to generate thumb: \(error)")
+        }
+
+        throw Error.thumbGeneration
+    }
 }
 
 // MARK: - Private methods
@@ -277,40 +285,13 @@ private extension AwesomePlayer {
         log.high("Player ready")
 
         // if the app goes to the background this method will get called again
-        // when re-entering the foreground. If we already have thumbs then
-        // we don't need to do anything.
-        guard thumbs.count == 0 else { return }
+        // when entering the foreground. We don't need to execute this code
+        // again.
+        guard timeObserverToken == nil else { return }
 
-        do {
-            try generateThumbs()
-            state = .stopped
-            timeObserverToken = observeTimes()
-            delegate?.awesomePlayerReady()
-        } catch {
-            delegate?.awesomePlayerFailed(with: Error.thumbGeneration)
-        }
-    }
-
-    private func generateThumbs() throws {
-
-        log.high("Generating thumbs")
-
-        let duration = Int(item.duration.seconds)
-
-        guard duration > 0 else { throw Error.thumbGeneration }
-
-        let generator = AVAssetImageGenerator(asset: asset)
-        generator.appliesPreferredTrackTransform = true
-
-        var timeValue = 0
-        repeat {
-            let time = CMTime(value: CMTimeValue(timeValue), timescale: 1)
-            let image = try generator.copyCGImage(at: time, actualTime: nil)
-            thumbs.append(.init(cgImage: image))
-            timeValue += thumbInterval
-        } while timeValue < duration
-
-        log.high("Generated \(thumbs.count) thumbs")
+        state = .stopped
+        timeObserverToken = observeTimes()
+        delegate?.awesomePlayerReady()
     }
 
     private func actuallySeek() {
