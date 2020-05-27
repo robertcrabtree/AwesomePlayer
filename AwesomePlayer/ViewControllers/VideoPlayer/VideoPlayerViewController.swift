@@ -249,7 +249,7 @@ extension VideoPlayerViewController: AwesomePlayerDelegate {
 extension VideoPlayerViewController {
 
     private func play() {
-        if player.currentTime == player.duration {
+        if abs(player.currentTime - player.duration) < 0.01 {
             player.seek(to: 0.0)
         }
         player.play()
@@ -285,7 +285,7 @@ extension VideoPlayerViewController {
     private func finishScrubbing() {
         isScrubbing = false
         if playAfterScrubbing {
-            if player.currentTime != player.duration {
+            if abs(player.currentTime - player.duration) > 0.01 {
                 player.play()
             } else {
                 playButton.setImage(playButtonImage, for: .normal)
